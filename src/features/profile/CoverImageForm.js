@@ -1,18 +1,41 @@
 import { useRef, useState } from "react";
+import { toast } from "react-toastify";
 import { useAuth } from "../../contexts/AuthContext"
 import CoverImage from "../../components/ui/CoverImage"
+import { useLoading } from "../../contexts/LoadingContext";
 
-function CoverImageForm() {
+
+function CoverImageForm({onSuccess}) {
   const {
-    user: { coverImage }
-  } = useAuth();
+    user: { coverImage }, updateUser} = useAuth();
+
+    const { startLoading, stopLoading } = useLoading();
 
   const [file, setFile] = useState(null);
 
   const inputEl = useRef();
+
+  const handleClickSave = async () => {
+    try {
+      startLoading();
+      const formData = new FormData();
+      formData.append('coverImage', file);
+      await updateUser(formData);
+      toast.success('success upload')
+      setFile(null);
+      onSuccess();
+    } catch (err) {
+      console.log(err)
+      toast.error(err.response?.data.message);
+    } finally {
+      stopLoading();
+    }
+  };
+
+
   return (
     <>
-      <div className="d-flex justify-content-between align-items-center pt-3">
+      <div className="d-flex justify-content-between align-items-center pt-3 cursor-pointer">
         <h5 className="mb-0">Cover Photo</h5>
         <input
           type="file"
@@ -27,7 +50,9 @@ function CoverImageForm() {
         <div>
           {file && (
             <>
-              <button className="btn btn-link text-decoration-none hover-bg-gray-100">
+              <button className="btn btn-link text-decoration-none hover-bg-gray-100"
+              onClick={handleClickSave}  
+            >
                 Save
               </button>
               <button

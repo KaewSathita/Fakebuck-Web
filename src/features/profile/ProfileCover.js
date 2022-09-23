@@ -12,7 +12,7 @@ function ProfileCover({ coverImage }) {
     >
         <CoverImage src={coverImage} />
     </div>
-  )
+  );
 }
 
 export default ProfileCover
