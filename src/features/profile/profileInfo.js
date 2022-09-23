@@ -5,9 +5,9 @@ import { useLoading } from "../../contexts/LoadingContext";
 import *  as friendService from '../../api/friendApi'
 import { toast } from "react-toastify";
 
-import { FRIEND_STATUS_ANNOUYMOUS } from "../../config/constants";
+import { FRIEND_STATUS_ANNOUYMOUS, FRIEND_STATUS_FRIEND, FRIEND_STATUS_REQUESTER } from "../../config/constants";
 
-function  ProfileInfo({ isMe, user: { profileImage, firstName, lastName, id}, friends, isFriend, isAnonymous, isRequester, isAccepter, changeStatusWithMe, deleteFriend }) {
+function  ProfileInfo({ isMe, user: { profileImage, firstName, lastName, id}, friends, isFriend, isAnonymous, isRequester, isAccepter, changeStatusWithMe, deleteFriend, createFriend }) {
 
   const { startLoading, stopLoading } = useLoading();
 
@@ -16,19 +16,46 @@ function  ProfileInfo({ isMe, user: { profileImage, firstName, lastName, id}, fr
     try {
       startLoading();
       await friendService.deleteFriend(id);
-      changeStatusWithMe(FRIEND_STATUS_ANNOUYMOUS)
-
+      changeStatusWithMe(FRIEND_STATUS_ANNOUYMOUS);
       if (isFriend) {
         deleteFriend();
       }
       toast.success('success delete')
     }catch (err) {
       console.log(err);
-      toast.error(err.response?.data.message)
+      toast.error(err.response?.data.message);
     } finally {
       stopLoading();
     }
   };
+
+  const handleClickAdd = async () => {
+    try {
+      startLoading();
+      await friendService.addFriend(id);
+      changeStatusWithMe(FRIEND_STATUS_REQUESTER);
+      toast.success('success add friend');
+    } catch (err) {
+      console.log(err);
+      toast.error(err.response?.data.message);
+    } finally {
+      stopLoading();
+    }
+  }
+  const handleClickAccept = async () => {
+    try {
+      startLoading();
+      await friendService.acceptFriend(id);
+      changeStatusWithMe(FRIEND_STATUS_FRIEND);
+      createFriend()
+      toast.success('success accept friend');
+    } catch (err) {
+      console.log(err);
+      toast.error(err.response?.data.message)
+    } finally {
+      stopLoading();
+    }
+  }
   
   return (
     <div className="d-flex flex-column flex-md-row align-items-center align-items-md-stretch mx-auto px-3 space-x-4 max-w-266">
@@ -64,7 +91,7 @@ function  ProfileInfo({ isMe, user: { profileImage, firstName, lastName, id}, fr
           )}
           {isAnonymous && (
             <button
-                className="btn btn-gray-200">
+                className="btn btn-gray-200" onClick={handleClickAdd}>
                 <i className="fa-solid fa-user-plus" /> Add friend
             </button>
           )}
@@ -77,7 +104,7 @@ function  ProfileInfo({ isMe, user: { profileImage, firstName, lastName, id}, fr
           {isAccepter && (
             <>
               <button
-                  className="btn btn-gray-200">
+                  className="btn btn-gray-200" onClick={handleClickAccept}>
                   <i className="fa-solid fa-user-check" /> Accept
               </button>
               <button

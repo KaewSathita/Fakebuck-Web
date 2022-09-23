@@ -47,6 +47,10 @@ function ProfileContainer() {
     setFriends(nextFriends);
   };
 
+  const createFriend = () => {
+    setFriends([...friends, me])
+  }
+
   return (
     <div
       className="shadow-sm pb-2"
@@ -63,6 +67,7 @@ function ProfileContainer() {
         isAccepter={statusWithMe === FRIEND_STATUS_ACCEPTER}
         changeStatusWithMe={changeStatusWithMe}
         deleteFriend={deleteFriend}
+        createFriend={createFriend}
       />
     </div>
   );
