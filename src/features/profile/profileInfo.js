@@ -1,8 +1,34 @@
 import Avatar from "../../components/ui/Avatar";
 import AvatarGroup from "../../components/ui/AvatarGroup";
 import ProfileEdit from "./ProfileEdit";
+import { useLoading } from "../../contexts/LoadingContext";
+import *  as friendService from '../../api/friendApi'
+import { toast } from "react-toastify";
 
-function profileInfo({ isMe, user: { profileImage, firstName, lastName}, friends, isFriend, isAnonymous, isRequester, isAccepter }) {
+import { FRIEND_STATUS_ANNOUYMOUS } from "../../config/constants";
+
+function  ProfileInfo({ isMe, user: { profileImage, firstName, lastName, id}, friends, isFriend, isAnonymous, isRequester, isAccepter, changeStatusWithMe, deleteFriend }) {
+
+  const { startLoading, stopLoading } = useLoading();
+
+
+  const handleClickDelete = async () => {
+    try {
+      startLoading();
+      await friendService.deleteFriend(id);
+      changeStatusWithMe(FRIEND_STATUS_ANNOUYMOUS)
+
+      if (isFriend) {
+        deleteFriend();
+      }
+      toast.success('success delete')
+    }catch (err) {
+      console.log(err);
+      toast.error(err.response?.data.message)
+    } finally {
+      stopLoading();
+    }
+  };
   
   return (
     <div className="d-flex flex-column flex-md-row align-items-center align-items-md-stretch mx-auto px-3 space-x-4 max-w-266">
@@ -32,7 +58,7 @@ function profileInfo({ isMe, user: { profileImage, firstName, lastName}, friends
           > {isMe && <ProfileEdit />}
           {isFriend && (
             <button
-                className="btn btn-gray-200">
+                className="btn btn-gray-200" onClick={handleClickDelete}>
                 <i className="fa-solid fa-user-xmark" /> Unfriend
             </button>
           )}
@@ -44,7 +70,7 @@ function profileInfo({ isMe, user: { profileImage, firstName, lastName}, friends
           )}
           {isRequester && (
             <button
-                className="btn btn-gray-200">
+                className="btn btn-gray-200" onClick={handleClickDelete}>
                 <i className="fa-solid fa-user-xmark" /> Cancel Request
             </button>
           )}
@@ -55,7 +81,7 @@ function profileInfo({ isMe, user: { profileImage, firstName, lastName}, friends
                   <i className="fa-solid fa-user-check" /> Accept
               </button>
               <button
-                  className="btn btn-gray-200 ms-3">
+                  className="btn btn-gray-200 ms-3" onClick={handleClickDelete}>
                   <i className="fa-solid fa-user-xmark" /> Reject
               </button>
             </>
@@ -66,4 +92,4 @@ function profileInfo({ isMe, user: { profileImage, firstName, lastName}, friends
   )
 }
 
-export default profileInfo;
+export default ProfileInfo;

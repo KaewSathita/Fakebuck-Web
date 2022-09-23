@@ -21,6 +21,7 @@ function ProfileContainer() {
 
   useEffect(() => {
     const fetchUserFriends = async () => {
+
       try { 
         startLoading()
         const res = await userService.getUserFriends(id);
@@ -35,7 +36,16 @@ function ProfileContainer() {
       }
     }
     fetchUserFriends();
-  }, [id, me]);
+  }, [id, me, startLoading, stopLoading]);
+  
+  const changeStatusWithMe = nextStatus => {
+    setStatusWithMe(nextStatus);
+  }
+
+  const deleteFriend = () => {
+    const nextFriends = friends.filter(item => item.id !== me.id)
+    setFriends(nextFriends);
+  };
 
   return (
     <div
@@ -51,6 +61,8 @@ function ProfileContainer() {
         isAnonymous={statusWithMe === FRIEND_STATUS_ANNOUYMOUS}
         isRequester={statusWithMe === FRIEND_STATUS_REQUESTER}
         isAccepter={statusWithMe === FRIEND_STATUS_ACCEPTER}
+        changeStatusWithMe={changeStatusWithMe}
+        deleteFriend={deleteFriend}
       />
     </div>
   );
