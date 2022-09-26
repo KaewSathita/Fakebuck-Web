@@ -1,5 +1,7 @@
+import Postcontainer from "../features/post/Postcontainer";
+
 function PostPage() {
-  return <h1>This is Post Page</h1>
+  return <Postcontainer />
 
 }
 
