@@ -1,9 +1,11 @@
 import { Link } from 'react-router-dom';
 import Avatar from '../../components/ui/Avatar';
+import { timeSince }  from '../../utils/dateFormat'
 
 function PostHeader({
   post: {
-    User: { firstName, lastName, id, profileImage }
+    User: { firstName, lastName, id, profileImage },
+    createdAt
   }
 }) {
   return (
@@ -18,7 +20,7 @@ function PostHeader({
         >
           {firstName} {lastName}
         </Link>
-        <small className="text-muted text-3">2m</small>
+        <small className="text-muted text-3">{timeSince(createdAt)}</small>
       </div>
       <div className="dropdown flex-fill text-end">
         <button className="btn rounded-circle position-relative h-9 w-9 hover-bg-gray-200">
