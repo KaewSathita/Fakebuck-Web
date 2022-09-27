@@ -7,9 +7,9 @@ function Post({ post, toggleLike, createComment }) {
     <div className="border bg-white shadow-sm px-3 rounded-lg tw-pt-3">
       <PostHeader post={post} />
       <PostContent post={post} />
-      <PostFooter 
-        post={post} 
-        toggleLike={toggleLike} 
+      <PostFooter
+        post={post}
+        toggleLike={toggleLike}
         createComment={createComment}
       />
     </div>

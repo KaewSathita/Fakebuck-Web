@@ -5,7 +5,7 @@ import Modal from '../../components/ui/Modal';
 import { useAuth } from '../../contexts/AuthContext';
 import PostForm from './PostForm';
 
-function PostCreateToggle( { createPost }) {
+function PostCreateToggle({ createPost }) {
   const {
     user: { id, profileImage, firstName }
   } = useAuth();
@@ -13,7 +13,7 @@ function PostCreateToggle( { createPost }) {
   const [isOpen, setIsOpen] = useState(false);
 
   const savePost = async input => {
-    await createPost(input)
+    await createPost(input);
     setIsOpen(false);
   };
 

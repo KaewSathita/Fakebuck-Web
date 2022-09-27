@@ -10,7 +10,7 @@ function PostContainer() {
   const [posts, setPosts] = useState([]);
   const {
     user: { id }
-  } = useAuth();  
+  } = useAuth();
 
   useEffect(() => {
     const fetchPost = async () => {
@@ -24,24 +24,23 @@ function PostContainer() {
     fetchPost();
   }, [id]);
 
-  const createPost =  async input => {
+  const createPost = async input => {
     const res = await postService.createPost(input);
     setPosts([res.data.post, ...posts]);
   };
-  
+
   const toggleLike = async postId => {
     try {
       const res = await likeService.toggleLike(postId);
       const idx = posts.findIndex(item => item.id === postId);
       const newPosts = [...posts];
-
       if (res.data.like) {
-        // console.log('like')
         newPosts[idx].Likes.push(res.data.like);
         return setPosts(newPosts);
       }
-
-      newPosts[idx].Likes= newPosts[idx].Likes.filter(item => item.userId !== id)
+      newPosts[idx].Likes = newPosts[idx].Likes.filter(
+        item => item.userId !== id
+      );
       setPosts(newPosts);
     } catch (err) {
       console.log(err);
@@ -54,20 +53,20 @@ function PostContainer() {
     const newPosts = [...posts];
     newPosts[idx].Comments.push(res.data.comment);
     setPosts(newPosts);
-    
-  
   };
 
   return (
     <div className="mx-auto py-4 max-w-152">
       <div className="mx-2 d-flex flex-column gap-3">
         <PostCreateToggle createPost={createPost} />
-        <PostList 
-          posts={posts} 
-          toggleLike={toggleLike} 
-          createComment={createComment}/>
+        <PostList
+          posts={posts}
+          toggleLike={toggleLike}
+          createComment={createComment}
+        />
       </div>
     </div>
   );
 }
-export default PostContainer
+
+export default PostContainer;

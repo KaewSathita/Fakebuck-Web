@@ -1,11 +1,10 @@
-import { useState } from "react";
-import CommentContainer from "../comment/CommentContainer";
-import PostAction from "./PostAction";
-import PostReaction from "./PostReaction";
+import { useState } from 'react';
+import CommentContainer from '../comment/CommentContainer';
+import PostAction from './PostAction';
+import PostReaction from './PostReaction';
 
 function PostFooter({ post, toggleLike, createComment }) {
   const [isCommentOpen, setIsCommentOpen] = useState(false);
-
   return (
     <>
       <PostReaction
@@ -16,9 +15,11 @@ function PostFooter({ post, toggleLike, createComment }) {
       <PostAction
         post={post}
         toggleLike={toggleLike}
-        toggleComment={() => setIsCommentOpen(!isCommentOpen)}
+        toggleComment={() => setIsCommentOpen(prev => !prev)}
       />
-      {isCommentOpen && <CommentContainer post={post} createComment={createComment}/>}
+      {isCommentOpen && (
+        <CommentContainer post={post} createComment={createComment} />
+      )}
     </>
   );
 }
